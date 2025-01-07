@@ -1,4 +1,6 @@
-from datetime import datetime
+from typing import Annotated
+
+from fastapi import Depends
 from sqlalchemy import func, TIMESTAMP, Integer
 from sqlalchemy.orm import Mapped, mapped_column, DeclarativeBase
 from sqlalchemy.ext.asyncio import AsyncAttrs, async_sessionmaker, create_async_engine, AsyncSession
@@ -19,6 +21,9 @@ async def get_session() -> AsyncSession:
             raise
         finally:
             await session.close()  # Закрываем сессию
+
+
+SessionDep = Annotated[AsyncSession, Depends(get_session)]
 
 
 class Base(AsyncAttrs, DeclarativeBase):
