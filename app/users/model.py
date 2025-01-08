@@ -1,16 +1,9 @@
 from typing import List
 
-from sqlalchemy import Enum, ForeignKey, Integer
+from sqlalchemy import ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from enum import Enum as PyEnum
 
 from app.database import Base
-
-
-# class Role(PyEnum):
-#     STUDENT = 'student'
-#     KURATOR = 'kurator'
-#     EVENT_ORGANIZER = 'event_organizer'
 
 
 class User(Base):
