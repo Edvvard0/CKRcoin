@@ -10,6 +10,18 @@ template = Jinja2Templates(directory='app/templates')
 
 @router.get('/')
 async def home_page(request: Request) -> HTMLResponse:
-    return template.TemplateResponse(name='index.html',
+    return template.TemplateResponse(name='main.html',
+                                     context={'request': request})
+
+
+@router.get('/profile')
+async def profile_page(request: Request) -> HTMLResponse:
+    return template.TemplateResponse(name='profile.html',
+                                     context={'request': request})
+
+
+@router.get('/wallet')
+async def wallet_page(request: Request) -> HTMLResponse:
+    return template.TemplateResponse(name='wallet.html',
                                      context={'request': request})
 

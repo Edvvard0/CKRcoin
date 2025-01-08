@@ -1,0 +1,104 @@
+/* Общие стили */
+body, html {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background-color: #252525;
+    color: #fff;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    text-align: center;
+}
+
+/* Лого */
+header .logo {
+    width: 150px;
+    margin-bottom: 20px;
+}
+
+/* Слайдер */
+.slider {
+    position: relative;
+    overflow: hidden;
+    margin: 20px 0;
+}
+
+.slides {
+    display: flex;
+    transition: transform 0.5s ease-in-out;
+}
+
+.slide {
+    min-width: 100%;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column; /* Элементы расположены по вертикали */
+    align-items: center; /* Центрирование по горизонтали (по желанию) */
+}
+
+.slide img {
+    width: 100%;
+    height: auto;
+}
+
+.prev, .next {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(68, 68, 68, 0.5);
+    border: none;
+    color: #fff;
+    padding: 10px;
+    cursor: pointer;
+}
+
+.prev {
+    left: 10px;
+}
+
+.next {
+    right: 10px;
+}
+
+/* Кнопка */
+.cta-button a {
+    padding: 15px 30px;
+    background-color: #1a73e8;
+    border: none;
+    color: #fff;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 20px;
+}
+
+.cta-button a:hover {
+    background-color: #0c47a1;
+}
+
+h1 {
+    font-size: 24px;
+    color: #ffffff; /* Белый текст */
+    background-color: #333; /* Тёмно-серый фон */
+    padding: 10px 20px; /* Внутренние отступы */
+    border: 2px solid #555; /* Граница */
+    border-radius: 10px; /* Скругление углов */
+    text-align: center;
+    display: inline-block; /* Для компактного размещения */
+    margin: 20px 0;
+}
+
+img {
+    width: 100%; /* Ширина 100% от родителя */
+    height: auto; /* Автоматическая высота для сохранения пропорций */
+    max-width: 350px; /* Максимальная ширина */
+    object-fit: cover; /* Обрезка изображения, чтобы оно вписалось в заданные размеры */
+}
+
+p {
+    max-width: 500px;
+    font-size: 15pt;
+}

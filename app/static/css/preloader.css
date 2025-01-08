@@ -1,0 +1,42 @@
+/* Стили для preloader */
+#preloader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #ffffff; /* Белый фон для preloader */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999; /* Выше, чем основной контент */
+    transition: opacity 0.5s ease-out;
+}
+
+/* Контейнер для логотипа и шариков */
+#preloader-container {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Логотип */
+#preloader-image {
+    max-width: 200px;
+    height: auto;
+    animation: fadeIn 1s ease-in-out;
+}
+
+/* Анимация появления логотипа */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
