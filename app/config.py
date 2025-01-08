@@ -6,7 +6,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 class Settings(BaseSettings):
     BOT_TOKEN: str
     ADMIN_IDS: List[int]
-    DB_URL: str = 'sqlite+aiosqlite:///data/db.sqlite3'
+    DB_URL: str = 'sqlite+aiosqlite:///D:/coin/data/db.sqlite3'
     BASE_SITE: str
 
     model_config = SettingsConfigDict(

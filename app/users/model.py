@@ -7,10 +7,10 @@ from enum import Enum as PyEnum
 from app.database import Base
 
 
-class Role(PyEnum):
-    STUDENT = 'student'
-    KURATOR = 'kurator'
-    EVENT_ORGANIZER = 'event_organizer'
+# class Role(PyEnum):
+#     STUDENT = 'student'
+#     KURATOR = 'kurator'
+#     EVENT_ORGANIZER = 'event_organizer'
 
 
 class User(Base):
@@ -20,11 +20,17 @@ class User(Base):
     tg_id: Mapped[int] = mapped_column(nullable=True, index=True)
     course: Mapped[int] = mapped_column()
     group_id: Mapped[int] = mapped_column(ForeignKey('groups.id'))
-    role: Mapped[str] = mapped_column(Enum(Role), index=True)
+    role_id: Mapped[int] = mapped_column(ForeignKey('roles.id'))
 
     grup: Mapped["Group"] = relationship('Group', back_populates='users')
+    role: Mapped["Role"] = relationship('Role', back_populates='users')
 
 
 class Group(Base):
     name: Mapped[str] = mapped_column(index=True, nullable=False)
     users: Mapped[List["User"]] = relationship('User', back_populates='grup')
+
+
+class Role(Base):
+    name: Mapped[str] = mapped_column(index=True, nullable=False)
+    users: Mapped[List["User"]] = relationship('User', back_populates='role')

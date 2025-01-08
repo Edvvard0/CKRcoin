@@ -12,8 +12,8 @@ class BaseDAO:
     async def find_all(cls, session: SessionDep, **filter_by):
         query = select(cls.model).filter_by(**filter_by)
         result = await session.execute(query)
-        blogs = result.scalars().all()
-        return blogs
+        otv = result.scalars().all()
+        return otv
 
     @classmethod
     async def add(cls, session: SessionDep, **values):
