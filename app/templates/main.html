@@ -1,0 +1,40 @@
+{% extends "base_templates.html" %}
+{% block title %}
+Главная
+{% endblock %}
+
+{% block content %}
+        <header>
+            <div class="balance-section">
+                <div class="balance-header">
+                    <p class="balance-value">648</p>
+                    <img src="/static/img/logo.png" alt="CKPcoin Logo" class="logo" style="margin-left: 10px;">
+                </div>
+            </div>
+        </header>
+
+        <main>
+            <section class="info-cards">
+                <div class="info-card red-card">
+                    <p class="card-title">Лидеры 👑</p>
+                    <p class="card-content">22-е место из 108</p>
+                </div>
+                <div class="info-card yellow-card">
+                    <p class="card-title">Начисления за месяц 🚀</p>
+                    <p class="card-content">+450 <img src="/static/img/scr.png" alt="CKPcoin Logo" class="logo" style="width: 20%;"></p>
+                </div>
+                <div class="info-card blue-card">
+                    <p class="card-title">Цель 🎯</p>
+                    <p class="card-content">600 / 3000</p>
+                </div>
+                <a href="/pages/profile" class="info-card purple-card">
+                    <p class="card-title">Мой профиль 📋</p>
+                </a>
+            </section>
+
+            <section class="navigation">
+                <a href="/static/img/pres.pdf" class="nav-button">Дорожная карта</a>
+                <a href="#" class="nav-button">Поддержка проекта</a>
+            </section>
+        </main>
+{% endblock %}

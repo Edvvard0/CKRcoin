@@ -1,0 +1,43 @@
+{% extends "base_templates.html" %}
+
+{% block title %}
+Кошелек
+{% endblock %}
+
+{% block content %}
+            <header>
+                <div class="balance-section">
+                    <div class="balance-header">
+                        <p class="balance-value">648</p>
+                        <img src="/static/img/logo.png" alt="CKPcoin Logo" class="logo" style="margin-left: 10px;">
+                    </div>
+                </div>
+            </header>
+            <main>
+                <section class="transaction-history">
+                    <h2>История транзакций</h2>
+                    <div class="transaction-card deposit">
+                        <p class="transaction-date">Выступление на концерте</p>
+                        <p class="transaction-amount">+ 100 CKP</p>
+                        <p class="transaction-type">20 сентября 2024</p>
+                    </div>
+                    <div class="transaction-card withdrawal">
+                        <p class="transaction-date">Telegram Premium 3 месяца</p>
+                        <p class="transaction-amount">- 500 CKP</p>
+                        <p class="transaction-type">18 сентября 2024</p>
+                    </div>
+                    <div class="transaction-card deposit">
+                        <p class="transaction-date">Олимпиада по русскому</p>
+                        <p class="transaction-amount">+ 200 CKP</p>
+                        <p class="transaction-type">15 сентября 2024</p>
+                    </div>
+                    <!-- Дополнительные карточки транзакций -->
+                </section>
+    
+                <section class="navigation">
+                    <a href="img/pres.pdf" class="nav-button">Дорожная карта</a>
+                    <a href="#" class="nav-button">Поддержка проекта</a>
+                </section>
+            </main>
+    
+{% endblock %}

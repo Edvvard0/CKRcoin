@@ -1,0 +1,35 @@
+{% extends "base_templates.html" %}
+{% block title %}
+Профиль
+{% endblock %}
+
+{% block content %}
+        <header>
+            <div class="profile-header">
+                <img src="/static/img/fokin.png" alt="User Avatar" class="avatar" style="width: 20%; border-radius: 100%;">
+                <h1 class="username">Александр Фокин</h1>
+            </div>
+            <div class="balance-section">
+                <div class="balance-header">
+                    <p class="balance-value">648</p>
+                    <img src="/static/img/logo.png" alt="CKPcoin Logo" class="logo" style="margin-left: 10px;">
+                </div>
+            </div>
+        </header>
+        <main>
+            <section class="info-cards">
+                <div class="info-card blue-card">
+                    <p class="card-title">Бонусы 🔥</p>
+                    <p class="card-content">150</p>
+                </div>
+                <a href="setting.html" class="info-card purple-card">
+                    <p class="card-title">Настройки профиля ⚙️</p>
+                </a>
+            </section>
+
+            <section class="navigation">
+                <a href="wallet.html" class="nav-button">История транзакций</a>
+                <a href="#" class="nav-button">Связаться с поддержкой</a>
+            </section>
+        </main>
+{% endblock %}
