@@ -10,6 +10,7 @@ from app.bot.create_bot import dp, start_bot, bot, stop_bot
 from app.config import settings
 from app.users.router import router as users_router
 from app.pages.router import router as pages_router
+from app.events.router import router as events_router
 from app.bot.router import router as bot_router
 
 
@@ -32,6 +33,7 @@ app = FastAPI(lifespan=lifespan)
 
 app.include_router(users_router)
 app.include_router(pages_router)
+app.include_router(events_router)
 app.mount('/static', StaticFiles(directory='app/static'), 'static')
 
 
