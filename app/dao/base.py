@@ -1,22 +1,21 @@
 from sqlalchemy import select, update as sqlalchemy_update, delete as sqlalchemy_delete
 from sqlalchemy.exc import SQLAlchemyError
+from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import joinedload
-
-from app.database import SessionDep
 
 
 class BaseDAO:
     model = None
 
     @classmethod
-    async def find_all(cls, session: SessionDep, **filter_by):
+    async def find_all(cls, session: AsyncSession, **filter_by):
         query = select(cls.model).filter_by(**filter_by)
         result = await session.execute(query)
         otv = result.scalars().all()
         return otv
 
     @classmethod
-    async def add(cls, session: SessionDep, **values):
+    async def add(cls, session: AsyncSession, **values):
         async with session.begin():
             new_instance = cls.model(**values)
             session.add(new_instance)
@@ -28,19 +27,19 @@ class BaseDAO:
             return new_instance
 
     @classmethod
-    async def find_one_or_none_by_id(cls, session: SessionDep, model_id: int):
+    async def find_one_or_none_by_id(cls, session: AsyncSession, model_id: int):
         query = select(cls.model).filter_by(id=model_id)
         result = await session.execute(query)
         return result.scalar_one_or_none()
 
     @classmethod
-    async def find_one_or_none(cls, session: SessionDep, **filter_by):
+    async def find_one_or_none(cls, session: AsyncSession, **filter_by):
         query = select(cls.model).filter_by(**filter_by)
         result = await session.execute(query)
         return result.scalar_one_or_none()
 
     @classmethod
-    async def update(cls, session: SessionDep, filter_by, **values):
+    async def update(cls, session: AsyncSession, filter_by, **values):
 
         values = {k: v for k, v in values.items() if v is not None}
 
@@ -61,7 +60,7 @@ class BaseDAO:
             return result.rowcount
 
     @classmethod
-    async def delete(cls, session: SessionDep, **filter_by):
+    async def delete(cls,session: AsyncSession, **filter_by):
         async with session.begin():
             query = sqlalchemy_delete(cls.model).filter_by(**filter_by)
             result = await session.execute(query)
