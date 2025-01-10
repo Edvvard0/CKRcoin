@@ -1,0 +1,40 @@
+{% extends "base_templates.html" %}
+
+{% block headrs %}
+<link rel="stylesheet" href="/static/css/current_event.css">
+{% endblock %}
+
+{% block title %}
+Название мероприятия
+{% endblock %}
+
+{% block content %}
+<div class="event-details">
+    <!-- Название мероприятия -->
+    <div class="event-title">
+        <h1>{{ event.name }}</h1>
+    </div>
+
+    <!-- Описание мероприятия -->
+    <div class="event-description">
+        <p>
+            {{ event.description }}
+        </p>
+    </div>
+
+    <!-- Дата мероприятия -->
+    <div class="event-date">
+        <p><strong>Дата:</strong> {{ event.date }}</p>
+    </div>
+
+    <!-- Награда -->
+    <div class="event-reward">
+        <p><strong>Награда:</strong> Спасибо</p>
+    </div>
+
+    <!-- Кнопка участвовать -->
+    <div class="event-action">
+        <button class="participate-button">Участвовать</button>
+    </div>
+</div>
+{% endblock %}
