@@ -11,8 +11,8 @@ last_names = ["Smith", "Johnson", "Brown", "Williams", "Jones", "Garcia", "Mille
 
 
 async def create_random_users():
-    ''' Перед запуском этого метода надо добавить
-    строчку async with async_session_maker() as session:
+    ''' Перед запуском этой функции надо добавить
+    контекстный менеджер async with async_session_maker() as session:
     в basedao перед началом транзакции
     '''
     for _ in range(10):

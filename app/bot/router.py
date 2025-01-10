@@ -5,6 +5,7 @@ from aiogram.fsm.state import StatesGroup, State
 from aiogram.types import Message, CallbackQuery
 
 from app.database import connection
+from app.users.auth import register_user
 from app.users.dao import UserDAO
 from app.users.schemas import TelegramIDModel
 
@@ -35,3 +36,5 @@ async def cmd_start(message: Message, session, **kwargs):
 async def check_code(message: Message, session, **kwargs):
     code = message.text
     print(code)
+    rez = await register_user(tg_id=message.from_user.id, secret_key=code)
+    await message.answer(rez)
