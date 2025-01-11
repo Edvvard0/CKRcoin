@@ -25,12 +25,6 @@ async def home_page(request: Request, user: SUser = Depends(get_profile)) -> HTM
                                               'user': user})
 
 
-# @router.get('/')
-# async def home_page(request: Request) -> HTMLResponse:
-#     return template.TemplateResponse(name='main.html',
-#                                      context={'request': request})
-
-
 @router.get('/profile/{tg_id}')
 async def profile_page(request: Request, user: SUser = Depends(get_profile)) -> HTMLResponse:
     return template.TemplateResponse(name='profile.html',

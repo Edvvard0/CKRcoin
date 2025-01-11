@@ -10,7 +10,7 @@ window.addEventListener('load', (event) => {
     if (userId) {
         localStorage.setItem("userId", userId);
         console.log("User ID сохранен:", userId);
-        alert("User ID сохранен:");
+//        alert("User ID сохранен:");
     } else {
         console.error("User ID не найден в initDataUnsafe.");
         alert("User ID не найден. Пожалуйста, перезагрузите страницу.");
