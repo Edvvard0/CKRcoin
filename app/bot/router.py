@@ -35,6 +35,6 @@ async def cmd_start(message: Message, session, **kwargs):
 @connection()
 async def check_code(message: Message, session, **kwargs):
     code = message.text
-    print(code)
+    # print(code)
     rez = await register_user(tg_id=message.from_user.id, secret_key=code)
     await message.answer(rez)

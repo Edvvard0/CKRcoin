@@ -3,57 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CKPcoin</title>
-    <link rel="stylesheet" href="/static/css/style.css">
-    <link rel="apple-touch-icon" sizes="180x180" href="/static/icons/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="/static/icons/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="/static/icons/favicon-16x16.png">
-    <link rel="manifest" href="src/icons/site.webmanifest">
-    <link rel="mask-icon" href="src/icons/safari-pinned-tab.svg" color="#5bbad5">
-    <meta name="msapplication-TileColor" content="#da532c">
-    <meta name="theme-color" content="#ffffff">
+    <title>Telegram WebApp</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <script src="/static/js/tg_config.js?v=1.0.2"></script>
+
 </head>
 <body>
-    <div class="container">
-        <!-- Лого проекта -->
-        <header>
-            <img src="/static/img/logo.png" alt="Логотип CKPcoin" class="logo">
-        </header>
-
-        <!-- Слайдер -->
-        <section class="slider">
-            <div class="slides">
-                <div class="slide">
-                    <h1>Первая крипта среди колледжей</h1>
-                    <img src="/static/img/index-slides/1.jfif" alt="Слайд 1">
-                    <p>Проект от студентов СКР позволяющий торговать, обмениваться и познавать мир крипты с помощью интерактивного приложения.</p>
-                </div>
-                <div class="slide">
-                    <h1>Уникальная система ARG-фарминга</h1>
-                    <img src="/static/img/index-slides/2.jfif" alt="Слайд 2">
-                    <p>Зарабатывать токены можно учавствуя в разнообразных мероприятиях и активностях.</p>
-                </div>
-                <div class="slide">
-                    <h1>Награды и привелегии</h1>
-                    <img src="/static/img/index-slides/3.jfif" alt="Слайд 3">
-                    <p>Учавствуйте в ежегодном рейтинге, получайте награды: подписки на разные сервисы, мерч CKPcoin и другое.</p>
-                </div>
-                <div class="slide">
-                    <h1>Прокачка аккаунта</h1>
-                    <img src="/static/img/index-slides/4.jfif" alt="Слайд 4">
-                    <p>Чем больше вы проявляете активности - тем больше наград вам доступно.</p>
-                </div>
-            </div>
-            <button class="prev">←</button>
-            <button class="next">→</button>
-        </section>
-
-        <!-- Кнопка -->
-        <div class="cta-button">
-            <a href="/static/main.html">Начать!</a>
-        </div>
+    <div>
+        <h1>Добро пожаловать в Telegram WebApp</h1>
+        <button onclick="redirectToMainPage()">Начать</button>
     </div>
-
-    <script src="src/js/script.js"></script>
+    <script src="/static/js/save_tg_id.js"></script>
 </body>
 </html>

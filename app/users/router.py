@@ -15,7 +15,7 @@ async def get_all_users(session: SessionDep) -> list[SUser]:
 
 
 @router.get('/profile')
-async def get_users(tg_id: int, session: SessionDep) -> SUser:
+async def get_profile(tg_id: int, session: SessionDep) -> SUser:
     return await UserDAO.find_one_or_none(session, tg_id=tg_id)
 
 

@@ -7,11 +7,11 @@
         <header>
             <div class="profile-header">
                 <img src="/static/img/fokin.png" alt="User Avatar" class="avatar" style="width: 20%; border-radius: 100%;">
-                <h1 class="username">Александр Фокин</h1>
+                <h1 class="username">{{ user.last_name }} {{ user.first_name }}</h1>
             </div>
             <div class="balance-section">
                 <div class="balance-header">
-                    <p class="balance-value">648</p>
+                    <p class="balance-value">{{ user.balance }}</p>
                     <img src="/static/img/logo.png" alt="CKPcoin Logo" class="logo" style="margin-left: 10px;">
                 </div>
             </div>
