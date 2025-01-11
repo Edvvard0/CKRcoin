@@ -19,6 +19,11 @@ async def get_profile(tg_id: int, session: SessionDep) -> SUser:
     return await UserDAO.find_one_or_none(session, tg_id=tg_id)
 
 
+@router.get('/top_10')
+async def get_top_users(session: SessionDep):
+    return await UserDAO.find_top_users(session)
+
+
 @router.post('/add_user')
 async def add_user(user: SUserAdd, session: SessionDep):
     await UserDAO.add(session, **user.dict())

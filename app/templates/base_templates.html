@@ -15,7 +15,7 @@
     <link rel="mask-icon" href="icons/safari-pinned-tab.svg" color="#5bbad5">
     <meta name="msapplication-TileColor" content="#da532c">
     <meta name="theme-color" content="#ffffff">
-    {% block headrs %} {% endblock %}
+    {% block headers %} {% endblock %}
 </head>
 <body>
     <div class="container" id="content">
@@ -32,7 +32,7 @@
         <!-- Нижняя навигация -->
         <footer>
             <nav class="bottom-nav">
-                <a href="/pages" class="bottom-nav-button">
+                <a onclick="redirectToMainPage()" class="bottom-nav-button">
                     <i class="fas fa-home"></i>
                 </a>
                 <a href="/pages/all_events" class="bottom-nav-button">

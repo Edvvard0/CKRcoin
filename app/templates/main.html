@@ -16,10 +16,12 @@
 
         <main>
             <section class="info-cards">
-                <div class="info-card red-card">
+                <a href="/pages/top_users" class="info-card red-card">
+                    <div  class="info-card red-card" >
                     <p class="card-title">Лидеры 👑</p>
-                    <p class="card-content">22-е место из 108</p>
                 </div>
+                </a>
+
                  <div class="info-card yellow-card">
                     <p class="card-title">Начисления за месяц 🚀</p>
                     <p class="card-content">+450 <img src="/static/img/scr.png" alt="CKPcoin Logo" class="logo" style="width: 20%;"></p>
@@ -28,7 +30,7 @@
                     <p class="card-title">Цель 🎯</p>
                     <p class="card-content">600 / 3000</p>
                 </div>
-                <a href="/pages/profile" class="info-card purple-card">
+                <a onclick="redirectToProfilePage()" class="info-card purple-card">
                     <p class="card-title">Мой профиль 📋</p>
                 </a>
             </section>

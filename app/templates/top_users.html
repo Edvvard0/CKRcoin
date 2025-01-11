@@ -1,0 +1,22 @@
+{% extends "base_templates.html" %}
+
+{% block headers %}
+<link rel="stylesheet" href="/static/css/top_users.css">
+{% endblock %}
+
+{% block title %}Топ пользователей{% endblock %}
+
+{% block content %}
+<div class="top-users-container">
+    <h1 class="top-users-title">Топ пользователей</h1>
+    <div class="users-list">
+        {% for user in users %}
+        <div class="user-card">
+            <p class="user-name">{{ user.last_name }} {{ user.first_name }}</p>
+            <p class="user-balance">Баланс: {{ user.balance }} CKP</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
+
