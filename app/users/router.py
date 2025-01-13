@@ -4,6 +4,7 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.orm import selectinload
 
 from app.database import SessionDep, get_session
+from app.events.dao import EventParticipatedDAO
 from app.events.router import get_event_by_id
 from app.users.dao import UserDAO
 from app.users.model import User
@@ -41,7 +42,7 @@ async def get_portfolio(session: SessionDep, tg_id: int, user=Depends(get_profil
 
 
 @router.post('/award_one_user')
-async def award_user(session: SessionDep,
+async def award_one_user(session: SessionDep,
                      tg_id: int,
                      event_id: int,
                      user=Depends(get_profile),
@@ -54,17 +55,35 @@ async def award_user(session: SessionDep,
 
 
 @router.post('/award_many_users')
-async def award_user(session: SessionDep,
+async def award_many_users(session: SessionDep,
                      event_id: int,
                      users_tg_id: list[TelegramIDModel],
                      event=Depends(get_event_by_id)):
     async with session:
         for user in users_tg_id:
             user = await UserDAO.find_one_or_none(session, tg_id=user.tg_id)
+            if user is None:
+                raise Exception(f'Пользователь с tg_id={user.tg_id} не найден')
             user.balance += event.award
         await session.commit()
     return {'message': 'Пользователи успешно награждены'}
 
+
+@router.post('/add_event_to_one_user')
+async def add_event_to_one_user(session: SessionDep, event_id: int, tg_id: int):
+    '''Обязательно добавить чтобы пользователь уже не был участником мероприятия'''
+
+    await EventParticipatedDAO.add(session, **{'users_id': tg_id, 'events_id': event_id})
+    return {'message': 'Мероприятие успешно добавлено в портфолио к пользователю'}
+
+
+@router.post('/add_event_to_many_user')
+async def add_event_to_many_user(session: SessionDep, event_id: int, users_tg_id: list[TelegramIDModel]):
+    '''Обязательно добавить чтобы пользователь уже не был участником мероприятия'''
+
+    for user in users_tg_id:
+        await EventParticipatedDAO.add(session, **{'users_id': user.tg_id, 'events_id': event_id})
+    return {'message': 'Мероприятие успешно добавлено в портфолио к пользователю'}
 
 
 @router.post('/add_user')
