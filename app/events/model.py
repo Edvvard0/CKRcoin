@@ -11,6 +11,7 @@ class Event(Base):
     name: Mapped[str] = mapped_column(nullable=False)
     description: Mapped[str]
     date: Mapped[datetime]
+    award: Mapped[int] = mapped_column(nullable=True, default=0)
     is_active: Mapped[bool] = mapped_column(default=True, index=True)
     participated = relationship('User', secondary='eventparticipateds', back_populates='events')
 

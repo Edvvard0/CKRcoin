@@ -3,7 +3,8 @@ from typing import List
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import selectinload
 
-from app.database import SessionDep
+from app.database import SessionDep, get_session
+from app.events.router import get_event_by_id
 from app.users.dao import UserDAO
 from app.users.model import User
 from app.users.schemas import SUser, SUserAdd, SUserUpdate
@@ -37,6 +38,19 @@ async def get_portfolio(session: SessionDep, tg_id: int, user=Depends(get_profil
         "tg_id": user.tg_id,
         "events": [{"id": e.id, "name": e.name, "date": e.date} for e in user.events]
     }
+
+
+@router.post('/award_user')
+async def award_user(session: SessionDep,
+                     tg_id: int,
+                     event_id: int,
+                     user=Depends(get_profile),
+                     event=Depends(get_event_by_id)):
+
+    async with session:
+        user.balance += event.award
+        await session.commit()
+    return {'message': 'Пользователь успешно награжден'}
 
 
 @router.post('/add_user')

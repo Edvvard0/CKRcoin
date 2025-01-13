@@ -8,4 +8,5 @@ class SEvent(BaseModel):
     name: str
     description: str
     date: datetime
+    award: int
     is_active: bool
