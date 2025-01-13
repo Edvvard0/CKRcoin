@@ -7,7 +7,7 @@ from app.database import SessionDep, get_session
 from app.events.router import get_event_by_id
 from app.users.dao import UserDAO
 from app.users.model import User
-from app.users.schemas import SUser, SUserAdd, SUserUpdate
+from app.users.schemas import SUser, SUserAdd, SUserUpdate, TelegramIDModel
 
 router = APIRouter(prefix='/users', tags=['Users'])
 
@@ -40,7 +40,7 @@ async def get_portfolio(session: SessionDep, tg_id: int, user=Depends(get_profil
     }
 
 
-@router.post('/award_user')
+@router.post('/award_one_user')
 async def award_user(session: SessionDep,
                      tg_id: int,
                      event_id: int,
@@ -51,6 +51,20 @@ async def award_user(session: SessionDep,
         user.balance += event.award
         await session.commit()
     return {'message': 'Пользователь успешно награжден'}
+
+
+@router.post('/award_many_users')
+async def award_user(session: SessionDep,
+                     event_id: int,
+                     users_tg_id: list[TelegramIDModel],
+                     event=Depends(get_event_by_id)):
+    async with session:
+        for user in users_tg_id:
+            user = await UserDAO.find_one_or_none(session, tg_id=user.tg_id)
+            user.balance += event.award
+        await session.commit()
+    return {'message': 'Пользователи успешно награждены'}
+
 
 
 @router.post('/add_user')

@@ -40,7 +40,7 @@ class SUserUpdate(BaseModel):
 
 
 class TelegramIDModel(BaseModel):
-    telegram_id: int
+    tg_id: int
 
     model_config = ConfigDict(from_attributes=True)
 
