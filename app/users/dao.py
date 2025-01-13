@@ -22,6 +22,14 @@ class UserDAO(BaseDAO):
         ]
         return ranked_records
 
+    @classmethod
+    async def find_one_or_none(cls, session: AsyncSession, tg_id: int, options=None):
+        query = select(User).filter_by(tg_id=tg_id)
+        if options:
+            query = query.options(*options)
+        rez = await session.execute(query)
+        return rez.scalar_one_or_none()
+
 
 class GroupDAO(BaseDAO):
     model = Group

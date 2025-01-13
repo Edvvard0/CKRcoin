@@ -19,6 +19,7 @@ class User(Base):
     role: Mapped["Role"] = relationship('Role', back_populates='users')
 
     secret_key: Mapped[str] = mapped_column(nullable=True, default=None)
+    events = relationship('Event', secondary='eventparticipateds', back_populates='participated')
 
 
 class Group(Base):

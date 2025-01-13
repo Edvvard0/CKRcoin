@@ -9,6 +9,7 @@ from app.users.schemas import SUser
 
 router = APIRouter(prefix='/pages',
                    tags=['Pages'])
+
 template = Jinja2Templates(directory='app/templates')
 
 
@@ -32,8 +33,8 @@ async def profile_page(request: Request, user: SUser = Depends(get_profile)) -> 
                                               'user': user})
 
 
-@router.get('/wallet')
-async def wallet_page(request: Request) -> HTMLResponse:
+@router.get('/wallet/{tg_id}')
+async def wallet_page(request: Request, tg_id: int) -> HTMLResponse:
     return template.TemplateResponse(name='wallet.html',
                                      context={'request': request})
 
