@@ -19,6 +19,12 @@ async def get_all_active_events(session: SessionDep) -> list[SEvent]:
     return rez
 
 
+@router.get('/all_past_events')
+async def get_all_past_events(session: SessionDep) -> list[SEvent]:
+    rez = await EventDAO.find_all(session, is_active=False)
+    return rez
+
+
 @router.get('/{event_id}')
 async def get_event_by_id(session: SessionDep, event_id: int) -> SEvent:
     rez = await EventDAO.find_one_or_none(session, id=event_id)
