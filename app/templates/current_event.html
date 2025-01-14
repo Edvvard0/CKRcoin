@@ -33,8 +33,10 @@
     </div>
 
     <!-- Кнопка участвовать -->
-<!--    <div class="event-action">-->
-<!--        <button class="participate-button">Участвовать</button>-->
-<!--    </div>-->
+    {% if user.role_id == 2 %}
+        <div class="event-action">
+            <button class="participate-button">Добавить участников</button>
+        </div>
+    {% endif %}
 </div>
 {% endblock %}

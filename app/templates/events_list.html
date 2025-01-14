@@ -17,7 +17,7 @@
             <h2 class="event-title">{{ event.name }}</h2>
             <p class="event-description">{{ event.description }}</p>
             <p class="event-date-time">{{ event.date }}</p>
-            <a href="/pages/event/{{ event.id }}" class="event-link">Подробнее</a>
+            <a onclick="redirectToCurrentEventPage({{ event.id }})" class="event-link">Подробнее</a>
         </div>
         {% endfor %}
     </div>

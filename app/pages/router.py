@@ -69,9 +69,10 @@ async def portfolio_page(request: Request, tg_id: int, user_info=Depends(get_por
                                               'events': event})
 
 
-@router.get('/event/{event_id}')
-async def all_events_page(request: Request,  event: SEvent = Depends(get_event_by_id)) -> HTMLResponse:
+@router.get('/event_by_id')
+async def all_events_page(request: Request,  event: SEvent = Depends(get_event_by_id), user: SUser = Depends(get_profile)) -> HTMLResponse:
     return template.TemplateResponse(name='current_event.html',
                                      context={'request': request,
-                                              'event': event})
+                                              'event': event,
+                                              'user': user})
 
