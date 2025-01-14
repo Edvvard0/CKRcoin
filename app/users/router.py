@@ -91,6 +91,17 @@ async def add_event_to_many_user(session: SessionDep, event_id: int, users_tg_id
     return {'message': 'Мероприятие успешно добавлено в портфолио к пользователю'}
 
 
+@router.post('/award_and_add_event_to_portfolio_many_users')
+async def award_and_add_event_to_portfolio_many_users(session: SessionDep,
+                                                      portfolio_info=Depends(add_event_to_many_user),
+                                                      award_info=Depends(award_many_users)):
+    if not portfolio_info['message'] == 'Мероприятие успешно добавлено в портфолио к пользователю':
+        raise Exception(f'не получилось добавить мероприятие в портфолио')
+    if not award_info['message'] == 'Пользователи успешно награждены':
+        raise Exception(f'не получилось наградить пользователей')
+    return {'message': 'Пользователи успешно награждены и мероприятие добавлено в портфолио'}
+
+
 @router.post('/add_user')
 async def add_user(user: SUserAdd, session: SessionDep):
     await UserDAO.add(session, **user.dict())
