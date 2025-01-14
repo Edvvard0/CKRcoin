@@ -30,6 +30,11 @@ async def get_top_users(session: SessionDep):
     return await UserDAO.find_top_users(session)
 
 
+@router.get('/users_by_group')
+async def get_users_by_group(session: SessionDep, group_id: int) -> List[SUser]:
+    return await UserDAO.find_all(session, **{'group_id': group_id, 'role_id': 1})
+
+
 @router.get('/portfolio')
 async def get_portfolio(session: SessionDep, tg_id: int, user=Depends(get_profile)):
     # await session.refresh(user, options=[selectinload(User.events)])
