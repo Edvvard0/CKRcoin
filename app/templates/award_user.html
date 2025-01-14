@@ -1,0 +1,70 @@
+{% extends "base_templates.html" %}
+
+{% block title %}Награждение участников{% endblock %}
+
+{% block content %}
+<div style="text-align: center; margin-top: 20px;">
+    <h1 style="color: #2c3e50;">{{ event.name }}</h1>
+</div>
+
+<div style="max-width: 800px; margin: 20px auto; background-color: #ecf0f1; padding: 20px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+    <form id="award-form">
+        {% for user in users %}
+        <div style="display: flex; align-items: center; justify-content: space-between; padding: 10px; margin-bottom: 10px; background-color: #ffffff; border: 1px solid #bdc3c7; border-radius: 5px;">
+            <div>
+                <span style="font-weight: bold; color: #34495e;">{{ user.first_name }} {{ user.last_name }}</span>
+            </div>
+            <div>
+                <input type="checkbox" name="user_tg_id" value="{{ user.tg_id }}" style="width: 18px; height: 18px;">
+            </div>
+        </div>
+        {% endfor %}
+    </form>
+
+    <div style="text-align: center; margin-top: 20px;">
+        <a onclick="awardUsers()" style="background-color: #3498db; color: white; border: none; padding: 10px 20px; font-size: 16px; border-radius: 5px; cursor: pointer;">
+            Наградить
+        </a>
+    </div>
+</div>
+<script>
+    async function awardUsers() {
+        const form = document.getElementById('award-form');
+        const formData = new FormData(form);
+        const selectedTgIds = formData.getAll('user_tg_id');
+
+        if (selectedTgIds.length === 0) {
+            alert("Пожалуйста, выберите хотя бы одного участника.");
+            return;
+        }
+
+        // Формируем тело запроса
+        const payload = selectedTgIds.map(tg_id => ({ tg_id: parseInt(tg_id) }));
+
+        try {
+            // Указываем event_id в query параметрах
+            const eventId = {{ event.id }};
+            const response = await fetch(`/users/award_and_add_event_to_portfolio_many_users?event_id=${eventId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(payload),
+            });
+
+            const result = await response.json();
+
+            if (response.ok) {
+                alert(result.message || "Успех! Пользователи награждены и мероприятие добавлено в портфолио.");
+            } else {
+                throw new Error(result.message || "Ошибка при награждении пользователей.");
+            }
+        } catch (error) {
+            alert(`Ошибка: ${error.message}`);
+        } finally {
+        // Перенаправляем на страницу всех прошедших мероприятий
+        window.location.href = '/pages/all_past_events';
+    }
+ }
+</script>
+{% endblock %}

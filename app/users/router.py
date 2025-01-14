@@ -35,6 +35,11 @@ async def get_users_by_group(session: SessionDep, group_id: int) -> List[SUser]:
     return await UserDAO.find_all(session, **{'group_id': group_id, 'role_id': 1})
 
 
+@router.get('/users_my_group')
+async def get_users_my_group(session: SessionDep, user: SUser = Depends(get_profile)) -> List[SUser]:
+    return await UserDAO.find_all(session, **{'group_id': user.group_id, 'role_id': 1})
+
+
 @router.get('/portfolio')
 async def get_portfolio(session: SessionDep, tg_id: int, user=Depends(get_profile)):
     # await session.refresh(user, options=[selectinload(User.events)])
@@ -97,8 +102,10 @@ async def award_and_add_event_to_portfolio_many_users(session: SessionDep,
                                                       award_info=Depends(award_many_users)):
     if not portfolio_info['message'] == 'Мероприятие успешно добавлено в портфолио к пользователю':
         raise Exception(f'не получилось добавить мероприятие в портфолио')
+
     if not award_info['message'] == 'Пользователи успешно награждены':
         raise Exception(f'не получилось наградить пользователей')
+
     return {'message': 'Пользователи успешно награждены и мероприятие добавлено в портфолио'}
 
 
