@@ -2,7 +2,7 @@ from fastapi import APIRouter, Request, Depends
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 
-from app.events.router import get_all_active_events, get_event_by_id
+from app.events.router import get_all_active_events, get_event_by_id, get_all_past_events
 from app.events.schemas import SEvent
 from app.users.router import get_profile, get_top_users, get_portfolio
 from app.users.schemas import SUser
@@ -48,6 +48,13 @@ async def top_users_page(request: Request, users=Depends(get_top_users)) -> HTML
 
 @router.get('/all_events')
 async def all_events_page(request: Request, event: SEvent = Depends(get_all_active_events)) -> HTMLResponse:
+    return template.TemplateResponse(name='events_list.html',
+                                     context={'request': request,
+                                              'events': event})
+
+
+@router.get('/all_past_events')
+async def all_past_events_page(request: Request, event: SEvent = Depends(get_all_past_events)) -> HTMLResponse:
     return template.TemplateResponse(name='events_list.html',
                                      context={'request': request,
                                               'events': event})

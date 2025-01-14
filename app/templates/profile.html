@@ -18,9 +18,17 @@
         </header>
         <main>
             <section class="info-cards">
+                {% if user.role_id == 2 %}
+                <a href="/pages/all_past_events" class="info-card blue-card">
+                    <p class="card-title">Прошедшие мероприятия</p>
+                </a>
+                {% else %}
                 <a onclick="redirectToPortfolioPage()" class="info-card blue-card">
                     <p class="card-title">Портфолио 🔥</p>
                 </a>
+                {% endif %}
+
+
                 <a onclick="redirectToProfilePage()" class="info-card purple-card">
                     <p class="card-title">Настройки профиля ⚙️</p>
                 </a>
