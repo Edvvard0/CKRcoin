@@ -15,7 +15,7 @@
                 <span style="font-weight: bold; color: #34495e;">{{ user.first_name }} {{ user.last_name }}</span>
             </div>
             <div>
-                <input type="checkbox" name="user_tg_id" value="{{ user.tg_id }}" style="width: 18px; height: 18px;">
+                <input type="checkbox" name="user_id" value="{{ user.id }}" style="width: 18px; height: 18px;">
             </div>
         </div>
         {% endfor %}
@@ -31,7 +31,7 @@
     async function awardUsers() {
         const form = document.getElementById('award-form');
         const formData = new FormData(form);
-        const selectedTgIds = formData.getAll('user_tg_id');
+        const selectedTgIds = formData.getAll('user_id');
 
         if (selectedTgIds.length === 0) {
             alert("Пожалуйста, выберите хотя бы одного участника.");
@@ -39,7 +39,9 @@
         }
 
         // Формируем тело запроса
-        const payload = selectedTgIds.map(tg_id => ({ tg_id: parseInt(tg_id) }));
+        const payload = selectedTgIds.map(id => ({ id: parseInt(id) }));
+
+<!--        alert(JSON.stringify(payload));-->
 
         try {
             // Указываем event_id в query параметрах

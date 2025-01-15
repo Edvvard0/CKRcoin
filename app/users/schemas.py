@@ -44,3 +44,8 @@ class TelegramIDModel(BaseModel):
 
     model_config = ConfigDict(from_attributes=True)
 
+
+class UserIDModel(BaseModel):
+    id: int
+
+    model_config = ConfigDict(from_attributes=True)

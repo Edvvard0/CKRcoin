@@ -8,7 +8,7 @@ from app.events.dao import EventParticipatedDAO
 from app.events.router import get_event_by_id
 from app.users.dao import UserDAO
 from app.users.model import User
-from app.users.schemas import SUser, SUserAdd, SUserUpdate, TelegramIDModel
+from app.users.schemas import SUser, SUserAdd, SUserUpdate, TelegramIDModel, UserIDModel
 
 router = APIRouter(prefix='/users', tags=['Users'])
 
@@ -21,8 +21,8 @@ async def get_all_users(session: SessionDep) -> list[SUser]:
 @router.get('/profile')
 async def get_profile(tg_id: int, session: SessionDep):
     return await UserDAO.find_one_or_none(session,
-                                          tg_id=tg_id,
-                                          options=[selectinload(User.events)])
+                                          options=[selectinload(User.events)],
+                                          **{'tg_id': tg_id})
 
 
 @router.get('/top_10')
@@ -67,32 +67,37 @@ async def award_one_user(session: SessionDep,
 @router.post('/award_many_users')
 async def award_many_users(session: SessionDep,
                      event_id: int,
-                     users_tg_id: list[TelegramIDModel],
+                     users_id: list[UserIDModel],
                      event=Depends(get_event_by_id)):
     async with session:
-        for user in users_tg_id:
-            user = await UserDAO.find_one_or_none(session, tg_id=user.tg_id)
+        for user in users_id:
+            user = await UserDAO.find_one_or_none_by_id(session, model_id=user.id)
             if user is None:
-                raise Exception(f'Пользователь с tg_id={user.tg_id} не найден')
+                raise Exception(f'Пользователь с tg_id={user.id} не найден')
             user.balance += event.award
         await session.commit()
     return {'message': 'Пользователи успешно награждены'}
 
 
 @router.post('/add_event_to_one_user')
-async def add_event_to_one_user(session: SessionDep, event_id: int, tg_id: int):
-    '''Обязательно добавить чтобы пользователь уже не был участником мероприятия'''
+async def add_event_to_one_user(session: SessionDep, event_id: int, user: SUser = Depends(get_profile)):
+    '''Обязательно добавить чтобы пользователь уже не был участником мероприятия
+    оно не работает. выдает ошибку
+    sqlalchemy.exc.InvalidRequestError: A transaction is already begun on this Session.
+    '''
 
-    await EventParticipatedDAO.add(session, **{'users_id': tg_id, 'events_id': event_id})
+    # print('start endpoint add_event_to_one_user')
+    await EventParticipatedDAO.add(session, **{'users_id': user.id, 'events_id': event_id})
     return {'message': 'Мероприятие успешно добавлено в портфолио к пользователю'}
 
 
 @router.post('/add_event_to_many_user')
-async def add_event_to_many_user(session: SessionDep, event_id: int, users_tg_id: list[TelegramIDModel]):
+async def add_event_to_many_user(session: SessionDep, event_id: int, users_id: list[UserIDModel]):
     '''Обязательно добавить чтобы пользователь уже не был участником мероприятия'''
 
-    for user in users_tg_id:
-        await EventParticipatedDAO.add(session, **{'users_id': user.tg_id, 'events_id': event_id})
+    for user in users_id:
+        # print(user.id)
+        await EventParticipatedDAO.add(session, **{'users_id': user.id, 'events_id': event_id})
     return {'message': 'Мероприятие успешно добавлено в портфолио к пользователю'}
 
 

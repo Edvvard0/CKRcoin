@@ -23,8 +23,8 @@ class UserDAO(BaseDAO):
         return ranked_records
 
     @classmethod
-    async def find_one_or_none(cls, session: AsyncSession, tg_id: int, options=None):
-        query = select(User).filter_by(tg_id=tg_id)
+    async def find_one_or_none(cls, session: AsyncSession, options=None, **filter_by):
+        query = select(User).filter_by(**filter_by)
         if options:
             query = query.options(*options)
         rez = await session.execute(query)
