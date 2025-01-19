@@ -6,20 +6,41 @@ window.addEventListener('load', (event) => {
 
     // Сохраняем userId в localStorage
     const userId = tg.initDataUnsafe.user?.id;
-//    alert("Telegram ID");
+    alert("Telegram ID");
     if (userId) {
         localStorage.setItem("userId", userId);
         console.log("User ID сохранен:", userId);
-//        alert("User ID сохранен:");
+        alert("User ID сохранен:");
     } else {
         console.error("User ID не найден в initDataUnsafe.");
         alert("User ID не найден. Пожалуйста, перезагрузите страницу.");
     }
 });
 
-        // Перенаправление на другую страницу
+
+ function Save_TG_ID() {
+    const tg = window.Telegram.WebApp;
+    tg.ready(); // Подготовка WebApp
+    tg.expand(); // Разворачиваем WebApp
+    tg.disableVerticalSwipes();
+
+    // Сохраняем userId в localStorage
+    const userId = tg.initDataUnsafe.user?.id;
+    alert("Telegram ID");
+    if (userId) {
+        localStorage.setItem("userId", userId);
+        console.log("User ID сохранен:", userId);
+        alert("User ID сохранен:");
+    } else {
+        console.error("User ID не найден в initDataUnsafe.");
+        alert("User ID не найден. Пожалуйста, перезагрузите страницу.");
+    }
+});
+
+// Перенаправление на другую страницу
  function redirectToMainPage() {
             const userId = localStorage.getItem("userId");
+            alert('Telegram');
             if (userId) {
                 window.location.href = `/pages/main/${userId}`;
             } else {

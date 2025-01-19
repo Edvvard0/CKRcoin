@@ -1,3 +1,5 @@
+import logging
+import time
 from contextlib import asynccontextmanager
 
 from aiogram.types import Update
@@ -35,6 +37,17 @@ app.include_router(users_router)
 app.include_router(pages_router)
 app.include_router(events_router)
 app.mount('/static', StaticFiles(directory='app/static'), 'static')
+
+
+@app.middleware('http')
+async def add_middleware(request: Request, call_next):
+    start_time = time.time()
+    response = await call_next(request)
+    process_time = time.time() - start_time
+
+    logging.basicConfig(level=logging.INFO)
+    logging.info(f"Request processed time {round(process_time, 3)} seconds")
+    return response
 
 
 @app.get("/")
