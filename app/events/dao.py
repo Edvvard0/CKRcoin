@@ -3,6 +3,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.dao.base import BaseDAO
 from app.events.model import Event, EventParticipant
+from app.events.schemas import SEventParticipant
 
 
 class EventDAO(BaseDAO):
@@ -18,5 +19,5 @@ class EventParticipatedDAO(BaseDAO):
         if options:
             query = query.options(*options)
         rez = await session.execute(query)
-        return rez.scalar_one_or_none()
+        return SEventParticipant.from_orm(rez.scalar_one_or_none())
 

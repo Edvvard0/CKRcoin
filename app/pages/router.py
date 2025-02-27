@@ -2,7 +2,7 @@ from fastapi import APIRouter, Request, Depends
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 
-from app.events.router import get_all_active_events, get_event_by_id, get_all_past_events
+from app.events.router import get_all_active_events, get_event_by_id, get_all_past_events, get_event_participant_by_id
 from app.events.schemas import SEvent, SEventParticipant
 from app.users.router import get_profile, get_top_users, get_portfolio, get_users_my_group
 from app.users.schemas import SUser
@@ -80,9 +80,16 @@ async def event_by_id_page(request: Request,  event: SEvent = Depends(get_event_
 @router.get('/award_user_page')
 async def award_user_page(request: Request,
                           users: list[SUser] = Depends(get_users_my_group),
-                          user_participated: SEventParticipant = Depends(get_users_my_group),
+                          user_participated: SEventParticipant = Depends(get_event_participant_by_id),
                           event: SEvent = Depends(get_event_by_id)
                           ) -> HTMLResponse:
+
+    participant = user_participated.model_dump()
+    # print(users)
+    no_participant = [user.id for user in users if user.id != participant["id"]]
+    # print(participant)
+    # print(no_participant)
+
     return template.TemplateResponse(name='award_user.html',
                                      context={'request': request,
                                               'users': users,
