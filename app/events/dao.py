@@ -2,7 +2,7 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.dao.base import BaseDAO
-from app.events.model import Event, EventParticipated
+from app.events.model import Event, EventParticipant
 
 
 class EventDAO(BaseDAO):
@@ -10,7 +10,7 @@ class EventDAO(BaseDAO):
 
 
 class EventParticipatedDAO(BaseDAO):
-    model = EventParticipated
+    model = EventParticipant
 
     @classmethod
     async def find_participant_by_event_id(cls, session: AsyncSession, event_id: int, options=None):

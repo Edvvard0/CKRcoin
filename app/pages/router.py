@@ -3,7 +3,7 @@ from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 
 from app.events.router import get_all_active_events, get_event_by_id, get_all_past_events
-from app.events.schemas import SEvent
+from app.events.schemas import SEvent, SEventParticipant
 from app.users.router import get_profile, get_top_users, get_portfolio, get_users_my_group
 from app.users.schemas import SUser
 
@@ -61,7 +61,7 @@ async def all_past_events_page(request: Request, event: SEvent = Depends(get_all
 
 
 @router.get('/portfolio_page')
-async def portfolio_page(request: Request, tg_id: int, user_info=Depends(get_portfolio)) -> HTMLResponse:
+async def portfolio_page(request: Request, user_info=Depends(get_portfolio)) -> HTMLResponse:
     event = user_info["events"]
     # print(event)
     return template.TemplateResponse(name='events_list.html',
@@ -78,7 +78,11 @@ async def event_by_id_page(request: Request,  event: SEvent = Depends(get_event_
 
 
 @router.get('/award_user_page')
-async def award_user_page(request: Request, users: list[SUser] = Depends(get_users_my_group), event: SEvent = Depends(get_event_by_id)) -> HTMLResponse:
+async def award_user_page(request: Request,
+                          users: list[SUser] = Depends(get_users_my_group),
+                          user_participated: SEventParticipant = Depends(get_users_my_group),
+                          event: SEvent = Depends(get_event_by_id)
+                          ) -> HTMLResponse:
     return template.TemplateResponse(name='award_user.html',
                                      context={'request': request,
                                               'users': users,

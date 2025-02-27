@@ -14,5 +14,5 @@ class SEvent(BaseModel):
     is_active: bool
 
 
-class SEventParticipated(SEvent):
-    participated: list[SUser]
+class SEventParticipant(SEvent):
+    participant: list[SUser]

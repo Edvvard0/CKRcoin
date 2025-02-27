@@ -4,7 +4,7 @@ from sqlalchemy.orm import selectinload
 from app.database import SessionDep
 from app.events.dao import EventDAO, EventParticipatedDAO
 from app.events.model import Event
-from app.events.schemas import SEvent, SEventParticipated
+from app.events.schemas import SEvent, SEventParticipant
 
 router = APIRouter(prefix='/event', tags=['Event'])
 
@@ -35,9 +35,9 @@ async def get_event_by_id(session: SessionDep, event_id: int) -> SEvent:
 
 @router.get('/event_participant')
 async def get_event_participant_by_id(session: SessionDep,
-                                      event_id: int) -> SEventParticipated:
+                                      event_id: int) -> SEventParticipant:
     rez = await EventParticipatedDAO.find_participant_by_event_id(session,
                                           event_id=event_id,
-                                          options=[selectinload(Event.participated)])
+                                          options=[selectinload(Event.participant)])
     return rez
 
