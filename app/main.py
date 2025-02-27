@@ -46,7 +46,7 @@ async def add_middleware(request: Request, call_next):
     process_time = time.time() - start_time
 
     logging.basicConfig(level=logging.INFO)
-    logging.info(f"Request processed time {round(process_time, 3)} seconds")
+    logging.info(f" Request processed time {round(process_time, 3)} seconds")
     return response
 
 
@@ -63,5 +63,5 @@ async def webhook(request: Request) -> None:
     print("Update processed")
 
 
-# if __name__ == "__main__":
-#     uvicorn.run("main:app", host="127.0.0.1", port=8080, reload=True)
+if __name__ == "__main__":
+    uvicorn.run("main:app", host="127.0.0.1", port=8080, reload=True)

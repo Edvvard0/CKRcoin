@@ -37,6 +37,9 @@ async def get_users_by_group(session: SessionDep, group_id: int) -> List[SUser]:
 
 @router.get('/users_my_group')
 async def get_users_my_group(session: SessionDep, user: SUser = Depends(get_profile)) -> List[SUser]:
+    """
+    Мне кажется этот метод надо объединить с методом get_users_by_group
+    """
     return await UserDAO.find_all(session, **{'group_id': user.group_id, 'role_id': 1})
 
 
@@ -53,8 +56,6 @@ async def get_portfolio(session: SessionDep, tg_id: int, user=Depends(get_profil
 
 @router.post('/award_one_user')
 async def award_one_user(session: SessionDep,
-                     tg_id: int,
-                     event_id: int,
                      user=Depends(get_profile),
                      event=Depends(get_event_by_id)):
 
@@ -66,7 +67,6 @@ async def award_one_user(session: SessionDep,
 
 @router.post('/award_many_users')
 async def award_many_users(session: SessionDep,
-                     event_id: int,
                      users_id: list[UserIDModel],
                      event=Depends(get_event_by_id)):
     async with session:

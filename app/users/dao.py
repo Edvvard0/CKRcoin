@@ -30,9 +30,6 @@ class UserDAO(BaseDAO):
         rez = await session.execute(query)
         return rez.scalar_one_or_none()
 
-    # @classmethod
-    # async def award_user(cls, session: AsyncSession):
-
 
 class GroupDAO(BaseDAO):
     model = Group
