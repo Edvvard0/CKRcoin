@@ -39,10 +39,10 @@ function redirectToCurrentEventPage(event_id) {
     }
 }
 
-function redirectToAwardPage(event_id) {
+function redirectToAwardPage(event_id, group_id) {
     const userId = localStorage.getItem("userId");
     if (userId) {
-        window.location.href = `/pages/award_user_page?tg_id=${userId}&event_id=${event_id}`;
+        window.location.href = `/pages/award_user_page?tg_id=${userId}&event_id=${event_id}&group_id=${group_id}`;
     } else {
         console.error("Telegram ID не найден в localStorage.");
         alert("Telegram ID не найден. Пожалуйста, перезагрузите страницу.");

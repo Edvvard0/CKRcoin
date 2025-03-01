@@ -9,7 +9,7 @@
 
 <div style="max-width: 800px; margin: 20px auto; background-color: #ecf0f1; padding: 20px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
     <form id="award-form">
-        {% for user in users %}
+        {% for user in no_participant %}
         <div style="display: flex; align-items: center; justify-content: space-between; padding: 10px; margin-bottom: 10px; background-color: #ffffff; border: 1px solid #bdc3c7; border-radius: 5px;">
             <div>
                 <span style="font-weight: bold; color: #34495e;">{{ user.first_name }} {{ user.last_name }}</span>
@@ -20,6 +20,15 @@
         </div>
         {% endfor %}
     </form>
+    <p>Пользователи, которые уже получили награды за это мероприятие</p>
+
+    {% for user in participant %}
+        <div style="display: flex; align-items: center; justify-content: space-between; padding: 10px; margin-bottom: 10px; background-color: #ffffff; border: 1px solid #bdc3c7; border-radius: 5px;">
+            <div>
+                <span style="font-weight: bold; color: #34495e;">{{ user.first_name }} {{ user.last_name }}</span>
+            </div>
+        </div>
+    {% endfor %}
 
     <div style="text-align: center; margin-top: 20px;">
         <a onclick="awardUsers()" style="background-color: #3498db; color: white; border: none; padding: 10px 20px; font-size: 16px; border-radius: 5px; cursor: pointer;">

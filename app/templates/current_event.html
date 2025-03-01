@@ -34,7 +34,7 @@
 
     <!-- Кнопка участвовать -->
     {% if user.role_id == 2 %}
-        <div class="event-action", onclick="redirectToAwardPage({{ event.id }})">
+        <div class="event-action", onclick="redirectToAwardPage({{ event.id }}, {{ user.group_id }})">
             <button class="participate-button">Добавить участников</button>
         </div>
     {% endif %}

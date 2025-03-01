@@ -84,14 +84,17 @@ async def award_user_page(request: Request,
                           event: SEvent = Depends(get_event_by_id)
                           ) -> HTMLResponse:
 
-    participant = user_participated.model_dump()
+    lst_participant = user_participated.model_dump()["participant"]
+    lst_participant_id = [participant["id"] for participant in lst_participant]
+    # print(lst_participant_id)
     # print(users)
-    no_participant = [user.id for user in users if user.id != participant["id"]]
-    # print(participant)
-    # print(no_participant)
+    lst_no_participant = [user for user in users if user.id not in lst_participant_id]
+    lst_participant = [user for user in users if user.id in lst_participant_id]
+    # print(lst_no_participant)
 
     return template.TemplateResponse(name='award_user.html',
                                      context={'request': request,
-                                              'users': users,
+                                              'no_participant': lst_no_participant,
+                                              'participant': lst_participant,
                                               'event': event})
 

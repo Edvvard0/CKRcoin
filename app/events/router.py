@@ -1,4 +1,4 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 from sqlalchemy.orm import selectinload
 
 from app.database import SessionDep
@@ -41,3 +41,9 @@ async def get_event_participant_by_id(session: SessionDep,
                                           options=[selectinload(Event.participant)])
     return rez
 
+
+# @router.get('/event_participant_test')
+# async def get_event_participant_by_id_test(session: SessionDep,
+#                                       event: SEventParticipant = Depends(get_event_participant_by_id)):
+#     print(event.model_dump())
+#     return event
