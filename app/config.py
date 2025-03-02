@@ -1,13 +1,18 @@
 import os
-from typing import List
+
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
     BOT_TOKEN: str
-    ADMIN_IDS: List[int]
-    DB_URL: str = 'sqlite+aiosqlite:///D:/coin/data/db.sqlite3'
+    ADMIN_IDS: list[int]
     BASE_SITE: str
+
+    DB_URL: str
+
+    API_HOST: str
+    API_PORT: int
+
     LOG_LEVEL: str
 
     model_config = SettingsConfigDict(
@@ -15,10 +20,8 @@ class Settings(BaseSettings):
     )
 
     def get_webhook_url(self) -> str:
-        """Возвращает URL вебхука с кодированием специальных символов."""
         return f"{self.BASE_SITE}/webhook"
 
 
-# Получаем параметры для загрузки переменных среды
 settings = Settings()
 database_url = settings.DB_URL

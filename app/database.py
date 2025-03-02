@@ -3,12 +3,18 @@ from typing import Annotated
 
 from fastapi import Depends
 from sqlalchemy import Integer, text
-from sqlalchemy.orm import Mapped, mapped_column, DeclarativeBase
-from sqlalchemy.ext.asyncio import AsyncAttrs, async_sessionmaker, create_async_engine, AsyncSession
+from sqlalchemy.exc import SQLAlchemyError
+from sqlalchemy.ext.asyncio import (
+    AsyncAttrs,
+    AsyncSession,
+    async_sessionmaker,
+    create_async_engine,
+)
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
 from app.config import database_url
+from app.logger import logger
 
-# Создание асинхронного движка для подключения к базе данных
 engine = create_async_engine(url=database_url)
 async_session_maker = async_sessionmaker(engine, class_=AsyncSession)
 
@@ -19,17 +25,26 @@ def connection(isolation_level=None):
         async def wrapper(*args, **kwargs):
             async with async_session_maker() as session:
                 try:
-                    # Устанавливаем уровень изоляции, если передан
                     if isolation_level:
-                        await session.execute(text(f"SET TRANSACTION ISOLATION LEVEL {isolation_level}"))
+                        await session.execute(
+                            text(f"SET TRANSACTION ISOLATION LEVEL {isolation_level}")
+                        )
 
-                    # Выполняем декорированный метод
                     return await method(*args, session=session, **kwargs)
-                except Exception as e:
-                    await session.rollback()  # Откатываем сессию при ошибке
-                    raise e  # Поднимаем исключение дальше
+
+                except (SQLAlchemyError, Exception) as e:
+                    await session.rollback()
+
+                    if isinstance(e, SQLAlchemyError):
+                        msg = "Database"
+                    else:
+                        msg = "Unknown"
+                    msg += " Exp: Cannot add"
+                    logger.error(msg, exc_info=True)
+                    raise e
+
                 finally:
-                    await session.close()  # Закрываем сессию
+                    await session.close()
 
         return wrapper
 
@@ -39,23 +54,32 @@ def connection(isolation_level=None):
 async def get_session() -> AsyncSession:
     async with async_session_maker() as session:
         try:
-            yield session  # Возвращаем сессию для использования
-        except Exception:
-            await session.rollback()  # Откатываем транзакцию при ошибке
-            raise
+            yield session
+
+        except (SQLAlchemyError, Exception) as e:
+            await session.rollback()
+
+            if isinstance(e, SQLAlchemyError):
+                msg = "Database"
+            else:
+                msg = "Unknown"
+            msg += " Exp: Cannot add"
+            logger.error(msg, exc_info=True)
+            raise e
+
         finally:
-            await session.close()  # Закрываем сессию
+            await session.close()
 
 
 SessionDep = Annotated[AsyncSession, Depends(get_session)]
 
 
 class Base(AsyncAttrs, DeclarativeBase):
-    __abstract__ = True  # Абстрактный базовый класс, чтобы избежать создания отдельной таблицы
+    __abstract__ = True
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
 
     @classmethod
     @property
     def __tablename__(cls) -> str:
-        return cls.__name__.lower() + 's'
+        return cls.__name__.lower() + "s"
