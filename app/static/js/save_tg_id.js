@@ -21,7 +21,7 @@ window.addEventListener('load', (event) => {
 // Перенаправление на другую страницу
  function redirectToMainPage() {
             const userId = localStorage.getItem("userId");
-            alert('Telegram');
+//            alert('Telegram');
             if (userId) {
                 window.location.href = `/pages/main/${userId}`;
             } else {

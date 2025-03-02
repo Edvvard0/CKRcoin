@@ -10,6 +10,7 @@ from fastapi.staticfiles import StaticFiles
 
 from app.bot.create_bot import dp, start_bot, bot, stop_bot
 from app.config import settings
+from app.logger import logger
 from app.users.router import router as users_router
 from app.pages.router import router as pages_router
 from app.events.router import router as events_router
@@ -45,8 +46,14 @@ async def add_middleware(request: Request, call_next):
     response = await call_next(request)
     process_time = time.time() - start_time
 
-    logging.basicConfig(level=logging.INFO)
-    logging.info(f" Request processed time {round(process_time, 3)} seconds")
+    logger.info("Request handling time",
+                extra={
+                    'process_time': round(process_time, 4),
+                    'url': request.url,
+                    'method': request.method,
+                    'status_code': response.status_code
+                })
+    # print(request.url)
     return response
 
 

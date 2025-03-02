@@ -8,6 +8,7 @@ class Settings(BaseSettings):
     ADMIN_IDS: List[int]
     DB_URL: str = 'sqlite+aiosqlite:///D:/coin/data/db.sqlite3'
     BASE_SITE: str
+    LOG_LEVEL: str
 
     model_config = SettingsConfigDict(
         env_file=os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", ".env")

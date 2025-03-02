@@ -4,7 +4,7 @@ from pydantic import BaseModel, Field, ConfigDict
 class BaseUser(BaseModel):
     first_name: str
     last_name: str
-    tg_id: int
+    tg_id: int | None
     course: int
 
     model_config = ConfigDict(from_attributes=True)
