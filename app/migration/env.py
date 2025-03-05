@@ -15,8 +15,8 @@ from alembic import context
 
 from app.config import database_url
 from app.database import Base
-from app.users.model import User
-from app.events.model import Event, EventParticipant
+from app.users.models import User
+from app.events.models import Event, EventParticipant
 
 
 

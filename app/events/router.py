@@ -3,7 +3,7 @@ from sqlalchemy.orm import selectinload
 
 from app.database import SessionDep
 from app.events.dao import EventDAO, EventParticipatedDAO
-from app.events.model import Event
+from app.events.models import Event
 from app.events.schemas import SEvent, SEventParticipant
 
 router = APIRouter(prefix='/event', tags=['Event'])
@@ -27,7 +27,7 @@ async def get_all_past_events(session: SessionDep) -> list[SEvent]:
     return rez
 
 
-@router.get('/event_by_id/{event_id}}')
+@router.get('/event_by_id/{event_id}')
 async def get_event_by_id(session: SessionDep, event_id: int) -> SEvent:
     rez = await EventDAO.find_one_or_none(session, id=event_id)
     return rez
@@ -41,9 +41,3 @@ async def get_event_participant_by_id(session: SessionDep,
                                           options=[selectinload(Event.participant)])
     return rez
 
-
-# @router.get('/event_participant_test')
-# async def get_event_participant_by_id_test(session: SessionDep,
-#                                       event: SEventParticipant = Depends(get_event_participant_by_id)):
-#     print(event.model_dump())
-#     return event

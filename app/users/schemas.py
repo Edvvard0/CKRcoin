@@ -1,19 +1,19 @@
-from pydantic import BaseModel, Field, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class BaseUser(BaseModel):
     first_name: str
     last_name: str
     tg_id: int | None
-    course: int
+    course: int = Field(ge=1, le=4)
 
     model_config = ConfigDict(from_attributes=True)
 
 
 class SUser(BaseUser):
-    id: int = Field(ge=1)
+    id: int
     balance: int = Field(ge=0, default=0)
-    role_id: int
+    role_id: int = Field(default=1)
     group_id: int
 
 
@@ -26,7 +26,7 @@ class SUserAllInfo(BaseUser):
 
 class SUserAdd(BaseUser):
     group_id: int
-    role_id: int
+    role_id: int = Field(default=1)
 
 
 class SUserUpdate(BaseModel):

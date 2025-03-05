@@ -14,7 +14,7 @@ from app.exceptions import (
 )
 from app.logger import logger
 from app.users.dao import UserDAO
-from app.users.model import User
+from app.users.models import User
 from app.users.schemas import SUser, SUserAdd, SUserUpdate, UserIDModel
 
 router = APIRouter(prefix="/users", tags=["Users"])

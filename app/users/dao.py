@@ -2,7 +2,7 @@ from sqlalchemy import select, desc
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.dao.base import BaseDAO
-from app.users.model import User, Group
+from app.users.models import User, Group
 
 
 class UserDAO(BaseDAO):

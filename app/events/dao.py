@@ -3,7 +3,7 @@ from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.dao.base import BaseDAO
-from app.events.model import Event, EventParticipant
+from app.events.models import Event, EventParticipant
 from app.events.schemas import SEventParticipant
 from app.logger import logger
 
