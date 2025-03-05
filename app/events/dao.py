@@ -1,9 +1,11 @@
 from sqlalchemy import select
+from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.dao.base import BaseDAO
 from app.events.model import Event, EventParticipant
 from app.events.schemas import SEventParticipant
+from app.logger import logger
 
 
 class EventDAO(BaseDAO):
@@ -36,4 +38,18 @@ class EventParticipatedDAO(BaseDAO):
                                                  "is_active": otv.is_active,
                                                  "participant": otv.participant
                                                  })
+
+    @classmethod
+    async def add(cls, session: AsyncSession, **values):
+        try:
+            new_instance = cls.model(**values)
+            session.add(new_instance)
+            return new_instance
+        except (SQLAlchemyError, Exception) as e:
+            if isinstance(e, SQLAlchemyError):
+                msg = "Database"
+            else:
+                msg = "Unknown"
+            msg += " Exp: Cannot add"
+            logger.error(msg, extra=values, exc_info=True)
 
