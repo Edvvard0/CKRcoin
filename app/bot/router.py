@@ -1,13 +1,11 @@
-from aiogram import Router, F
+from aiogram import Router
 from aiogram.filters import CommandStart
-from aiogram.fsm.context import FSMContext
-from aiogram.fsm.state import StatesGroup, State
-from aiogram.types import Message, CallbackQuery
+from aiogram.types import Message
 
 from app.database import connection
 from app.users.auth import register_user
 from app.users.dao import UserDAO
-from app.users.schemas import TelegramIDModel
+
 
 router = Router()
 
@@ -35,6 +33,5 @@ async def cmd_start(message: Message, session, **kwargs):
 @connection()
 async def check_code(message: Message, session, **kwargs):
     code = message.text
-    # print(code)
     rez = await register_user(tg_id=message.from_user.id, secret_key=code)
     await message.answer(rez)
