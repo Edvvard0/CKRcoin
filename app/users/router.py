@@ -1,10 +1,17 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
+from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import selectinload
+from starlette import status
 
 from app.database import SessionDep
 from app.events.dao import EventParticipatedDAO
 from app.events.router import get_event_by_id
-from app.exceptions import UserNoExistsException
+from app.events.schemas import SEvent
+from app.exceptions import (
+    TopUsersException,
+    UserNoExistsException,
+    UsersMyGroupException,
+)
 from app.logger import logger
 from app.users.dao import UserDAO
 from app.users.model import User
@@ -13,47 +20,60 @@ from app.users.schemas import SUser, SUserAdd, SUserUpdate, UserIDModel
 router = APIRouter(prefix="/users", tags=["Users"])
 
 
-@router.get("/all_users")
+@router.get("/")
 async def get_all_users(session: SessionDep) -> list[SUser]:
-    return await UserDAO.find_all(session)
+    logger.debug("Fetching all users")
+    users = await UserDAO.find_all(session)
+    logger.info(f"Retrieved {len(users)} users")
+    return users
 
 
-@router.get("/profile")
+@router.get("/profile/{tg_id}")
 async def get_profile(tg_id: int, session: SessionDep) -> SUser:
+    extra = {"tg_id": tg_id}
+    logger.debug("Fetching profile", extra=extra)
+
     user = await UserDAO.find_one_or_none(
         session, options=[selectinload(User.events)], **{"tg_id": tg_id}
     )
 
     if user is None:
-        raise UserNoExistsException
+        logger.warning("User not find", extra=extra)
+        raise UserNoExistsException(tg_id)
 
+    logger.info("Profile retrieved", extra)
     return user
 
 
 @router.get("/top_10")
 async def get_top_users(session: SessionDep):
-    return await UserDAO.find_top_users(session)
-
-
-@router.get("/users_by_group")
-async def get_users_by_group(
-        session: SessionDep, group_id: int | None) -> list[SUser]:
-    return await UserDAO.find_all(session, **{"group_id": group_id, "role_id": 1})
+    logger.debug("Fetching top users")
+    top_users = await UserDAO.find_top_users(session)
+    if not top_users:
+        logger.error("Could not get top users")
+        raise TopUsersException
+    return top_users
 
 
 @router.get("/users_my_group")
 async def get_users_my_group(
     session: SessionDep, user: SUser = Depends(get_profile)
 ) -> list[SUser]:
-    """
-    Мне кажется этот метод надо объединить с методом get_users_by_group
-    """
-    return await UserDAO.find_all(session, **{"group_id": user.group_id, "role_id": 1})
+    extra = {"group_id": user.group_id}
+    logger.debug("Fetching users my group", extra=extra)
+
+    users_my_group = await UserDAO.find_all(
+        session, **{"group_id": user.group_id, "role_id": 1}
+    )
+
+    if not users_my_group:
+        logger.warning("Could not find users for this group", extra=extra)
+        raise UsersMyGroupException
+    return users_my_group
 
 
-@router.get("/portfolio")
-async def get_portfolio(session: SessionDep, tg_id: int, user=Depends(get_profile)):
-    # await session.refresh(user, options=[selectinload(User.events)])
+@router.get("/portfolio/{tg_id}")
+async def get_portfolio(session: SessionDep, user=Depends(get_profile)):
     return {
         "first_name": user.first_name,
         "last_name": user.last_name,
@@ -62,94 +82,107 @@ async def get_portfolio(session: SessionDep, tg_id: int, user=Depends(get_profil
     }
 
 
-@router.post("/award_one_user")
-async def award_one_user(
-    session: SessionDep, user=Depends(get_profile), event=Depends(get_event_by_id)
-):
-
-    async with session:
-        user.balance += event.award
-        await session.commit()
-    return {"message": "Пользователь успешно награжден"}
-
-
-@router.post("/award_many_users")
-async def award_many_users(
+@router.post("/award_users")
+async def award_users(
     session: SessionDep, users_id: list[UserIDModel], event=Depends(get_event_by_id)
 ):
     async with session:
-        for user in users_id:
-            user = await UserDAO.find_one_or_none_by_id(session, model_id=user.id)
+        for user_id in users_id:
+            user = await UserDAO.find_one_or_none_by_id(session, model_id=user_id.id)
             if user is None:
-                raise Exception(f"Пользователь с tg_id={user.id} не найден")
+                raise UserNoExistsException(user_id.id)
             user.balance += event.award
         await session.commit()
     return {"message": "Пользователи успешно награждены"}
 
 
-@router.post("/add_event_to_one_user")
-async def add_event_to_one_user(
-    session: SessionDep, event_id: int, user: SUser = Depends(get_profile)
-):
-    """Обязательно добавить чтобы пользователь уже не был участником мероприятия
-    оно не работает. выдает ошибку
-    sqlalchemy.exc.InvalidRequestError: A transaction is already begun on this Session.
-    """
-
-    # print('start endpoint add_event_to_one_user')
-    await EventParticipatedDAO.add(
-        session, **{"users_id": user.id, "events_id": event_id}
-    )
-    return {"message": "Мероприятие успешно добавлено в портфолио к пользователю"}
-
-
-@router.post("/add_event_to_many_user")
-async def add_event_to_many_user(
+@router.post("/events/{event_id}/participants")
+async def add_event_participants(
     session: SessionDep, event_id: int, users_id: list[UserIDModel]
 ):
-    """Обязательно добавить чтобы пользователь уже не был участником мероприятия"""
-
+    logger.debug(f"Adding event_id={event_id} to users: {[u.id for u in users_id]}")
     for user in users_id:
-        # print(user.id)
         await EventParticipatedDAO.add(
             session, **{"users_id": user.id, "events_id": event_id}
         )
+        logger.info(
+            "Add new participant for event",
+            extra={"event_id": event_id, "user_id": user.id},
+        )
+    logger.info(f"Event_id={event_id} added to {len(users_id)} users")
     return {"message": "Мероприятие успешно добавлено в портфолио к пользователю"}
 
 
-@router.post("/award_and_add_event_to_portfolio_many_users")
-async def award_and_add_event_to_portfolio_many_users(
+@router.post("/events/{event_id}/award_and_add")
+async def award_and_add_event_to_portfolio_users(
+    users_id: list[UserIDModel],
     session: SessionDep,
-    portfolio_info=Depends(add_event_to_many_user),
-    award_info=Depends(award_many_users),
+    event: SEvent = Depends(get_event_by_id),
 ):
-    if (
-        not portfolio_info["message"]
-        == "Мероприятие успешно добавлено в портфолио к пользователю"
-    ):
-        raise Exception("не получилось добавить мероприятие в портфолио")
+    logger.debug(
+        f"Processing award and event addition for event_id={event.id}",
+        f"and users: {[u.id for u in users_id]}"
+    )
 
-    if not award_info["message"] == "Пользователи успешно награждены":
-        raise Exception("не получилось наградить пользователей")
+    awarded_users = 0
+    added_events = 0
 
-    return {
-        "message": "Пользователи успешно награждены и мероприятие добавлено в портфолио"
-    }
+    try:
+        for user_id in users_id:
+            user = await UserDAO.find_one_or_none_by_id(session, model_id=user_id.id)
+            if user is None:
+                logger.warning(f"User with id={user_id.id} not found, skipping")
+                continue
+
+            existing = await EventParticipatedDAO.find_one_or_none(
+                session, users_id=user.id, events_id=event.id
+            )
+            if existing:
+                logger.warning(
+                    f"User id={user.id} already participates in" +
+                    f"event_id={event.id}, skipping event addition"
+                )
+            else:
+                await EventParticipatedDAO.add(
+                    session, **{"users_id": user.id, "events_id": event.id}
+                )
+                user.balance += event.award
+
+                awarded_users += 1
+                added_events += 1
+
+        await session.commit()
+
+        logger.info(
+            f"Awarded {awarded_users} users with {event.award}" +
+            f"and added event_id={event.id} to {added_events} portfolios"
+        )
+        return {
+            "message": f"Successfully awarded {awarded_users}" +
+            f"users and added event to {added_events} portfolios"
+        }
+
+    except SQLAlchemyError as e:
+        logger.error(f"Database error occurred: {str(e)}", exc_info=True)
+
+    except Exception as e:
+        logger.error(f"Unexpected error occurred: {str(e)}", exc_info=True)
+        raise HTTPException(status_code=500, detail="An unexpected error occurred")
 
 
-@router.post("/add_user")
+@router.post("/add_user", status_code=status.HTTP_201_CREATED)
 async def add_user(user: SUserAdd, session: SessionDep):
     await UserDAO.add(session, **user.dict())
     return {"message": "Пользователь успешно добавлен"}
 
 
-@router.patch("/update_user")
+@router.patch("/update_user/{tg_id}")
 async def update_user(tg_id: int, user: SUserUpdate, session: SessionDep):
     await UserDAO.update(session, filter_by={"tg_id": tg_id}, **user.dict())
     return {"message": "Данные успешно обновлены"}
 
 
-@router.delete("/delete_user")
+@router.delete("/delete_user/{tg_id}")
 async def delete_user(tg_id: int, session: SessionDep):
     await UserDAO.delete(session, tg_id=tg_id)
     return {"message": "Пользователь успешно удален"}
