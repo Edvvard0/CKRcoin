@@ -60,7 +60,7 @@ async def all_past_events_page(request: Request, event: SEvent = Depends(get_all
                                               'events': event})
 
 
-@router.get('/portfolio_page')
+@router.get('/portfolio_page/{tg_id}')
 async def portfolio_page(request: Request, user_info=Depends(get_portfolio)) -> HTMLResponse:
     event = user_info["events"]
     # print(event)
@@ -69,8 +69,11 @@ async def portfolio_page(request: Request, user_info=Depends(get_portfolio)) -> 
                                               'events': event})
 
 
-@router.get('/event_by_id')
-async def event_by_id_page(request: Request,  event: SEvent = Depends(get_event_by_id), user: SUser = Depends(get_profile)) -> HTMLResponse:
+@router.get('/event_by_id/{event_id}/user/{tg_id}')
+async def event_by_id_page(request: Request,
+                           event: SEvent = Depends(get_event_by_id),
+                           user: SUser = Depends(get_profile)
+                           ) -> HTMLResponse:
     return template.TemplateResponse(name='current_event.html',
                                      context={'request': request,
                                               'event': event,
