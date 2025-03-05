@@ -32,7 +32,6 @@ function redirectToPortfolioPage() {
 function redirectToCurrentEventPage(event_id) {
     const userId = localStorage.getItem("userId");
     if (userId) {
-        alert("вяапявлапявар");
         window.location.href = `/pages/event_by_id/${event_id}/user/${userId}`;
     } else {
         console.error("Telegram ID не найден в localStorage.");
