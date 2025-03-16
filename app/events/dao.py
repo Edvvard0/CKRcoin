@@ -22,14 +22,7 @@ class EventParticipatedDAO(BaseDAO):
             query = query.options(*options)
         rez = await session.execute(query)
         otv = rez.scalar_one_or_none()
-        # print({"id": otv.id,
-        #        "name": otv.name,
-        #        "description": otv.description,
-        #        "date": otv.date,
-        #        "award": otv.award,
-        #        "is_active": otv.is_active,
-        #        "participant": otv.participant
-        #                                          })
+
         return SEventParticipant.model_validate({"id": otv.id,
                                                  "name": otv.name,
                                                  "description": otv.description,
