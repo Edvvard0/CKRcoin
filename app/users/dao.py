@@ -2,7 +2,7 @@ from sqlalchemy import select, desc
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.dao.base import BaseDAO
-from app.users.model import User, Group
+from app.users.models import User, Group
 
 
 class UserDAO(BaseDAO):
@@ -29,9 +29,6 @@ class UserDAO(BaseDAO):
             query = query.options(*options)
         rez = await session.execute(query)
         return rez.scalar_one_or_none()
-
-    # @classmethod
-    # async def award_user(cls, session: AsyncSession):
 
 
 class GroupDAO(BaseDAO):

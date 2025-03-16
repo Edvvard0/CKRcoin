@@ -21,7 +21,7 @@
 function redirectToPortfolioPage() {
     const userId = localStorage.getItem("userId");
     if (userId) {
-        window.location.href = `/pages/portfolio_page?tg_id=${userId}`;
+        window.location.href = `/pages/portfolio_page/${userId}`;
     } else {
         console.error("Telegram ID не найден в localStorage.");
         alert("Telegram ID не найден. Пожалуйста, перезагрузите страницу.");
@@ -32,14 +32,14 @@ function redirectToPortfolioPage() {
 function redirectToCurrentEventPage(event_id) {
     const userId = localStorage.getItem("userId");
     if (userId) {
-        window.location.href = `/pages/event_by_id?tg_id=${userId}&event_id=${event_id}`;
+        window.location.href = `/pages/event_by_id/${event_id}/user/${userId}`;
     } else {
         console.error("Telegram ID не найден в localStorage.");
         alert("Telegram ID не найден. Пожалуйста, перезагрузите страницу.");
     }
 }
 
-function redirectToAwardPage(event_id) {
+function redirectToAwardPage(event_id, group_id) {
     const userId = localStorage.getItem("userId");
     if (userId) {
         window.location.href = `/pages/award_user_page?tg_id=${userId}&event_id=${event_id}`;

@@ -3,7 +3,7 @@ import random
 from sqlalchemy.orm import Session
 from app.database import engine, get_session, SessionDep  # Импорт вашего подключения к базе данных
 from app.users.dao import UserDAO
-from app.users.model import User
+from app.users.models import User
 
 # Имена и фамилии для генерации случайных пользователей
 first_names = ["Alice", "Bob", "Charlie", "Diana", "Eve", "Frank", "Grace", "Hank", "Ivy", "Jack"]
