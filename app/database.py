@@ -2,7 +2,7 @@ from functools import wraps
 from typing import Annotated
 
 from fastapi import Depends
-from sqlalchemy import Integer, text
+from sqlalchemy import Integer, text, NullPool
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.ext.asyncio import (
     AsyncAttrs,
@@ -12,10 +12,19 @@ from sqlalchemy.ext.asyncio import (
 )
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
-from app.config import database_url
+from app.config import settings
 from app.logger import logger
 
-engine = create_async_engine(url=database_url)
+
+if settings.MODE == "TEST":
+    DATABASE_URL = settings.TEST_DB_URL
+    DATABASE_PARAMS = {"poolclass": NullPool}
+else:
+    DATABASE_URL = settings.DB_URL
+    DATABASE_PARAMS = {}
+
+
+engine = create_async_engine(url=DATABASE_URL, **DATABASE_PARAMS)
 async_session_maker = async_sessionmaker(engine, class_=AsyncSession)
 
 
