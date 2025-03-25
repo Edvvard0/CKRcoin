@@ -20,3 +20,9 @@ UsersMyGroupException = HTTPException(
     status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
     detail='Could not find users for this group'
 )
+
+
+AddException = HTTPException(
+    status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+    detail='Could not add data'
+)

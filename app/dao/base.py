@@ -3,6 +3,7 @@ from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import joinedload
 
+from app.exceptions import AddException
 from app.logger import logger
 
 
@@ -35,6 +36,7 @@ class BaseDAO:
                 msg = "Unknown"
             msg += " Exp: Cannot add"
             logger.error(msg, extra=values, exc_info=True)
+            raise AddException
 
     @classmethod
     async def find_one_or_none_by_id(cls, session: AsyncSession, model_id: int):

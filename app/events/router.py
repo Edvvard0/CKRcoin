@@ -10,7 +10,7 @@ router = APIRouter(prefix='/event', tags=['Event'])
 
 
 @router.get('/all_events')
-async def get_all_events(session: SessionDep):
+async def get_all_events(session: SessionDep) -> list[SEvent]:
     rez = await EventDAO.find_all(session)
     return rez
 
